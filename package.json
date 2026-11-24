@@ -1,0 +1,21 @@
+{
+  "name": "oracyne-open",
+  "version": "1.0.0",
+  "description": "Oracyne AI — Limited Open-Source Edition: runnable voice barge-in sandbox, transcript punctuation, 28-language catalog, and Google Colab GPU notebook.",
+  "private": false,
+  "license": "MIT",
+  "scripts": {
+    "build": "esbuild src/client/app.ts --bundle --platform=browser --format=iife --outfile=dist/client/app.js",
+    "dev": "npm run build && tsx src/server.ts",
+    "start": "npm run build && tsx src/server.ts",
+    "typecheck": "tsc --noEmit",
+    "pretest": "npm run build",
+    "test": "tsx --test tests/*.test.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "esbuild": "^0.25.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
+  }
+}

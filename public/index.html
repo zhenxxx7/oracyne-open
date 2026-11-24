@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Oracyne AI — Limited Open-Source Voice Sandbox</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <div>
+          <span class="eyebrow">Limited Community Edition · MIT Open Modules</span>
+          <h1>Oracyne AI Voice Sandbox</h1>
+          <p class="subtitle">
+            Standalone runnable sandbox showcasing adaptive voice barge-in DSP, natural speech punctuation, stateless
+            tutor chat, and 28 neural voice profiles.
+          </p>
+        </div>
+        <span id="runtime-badge" class="pill pill-demo">Checking runtime…</span>
+      </header>
+
+      <nav class="tabs" aria-label="Sandbox Modes">
+        <button type="button" class="tab active" data-tab="lab">Voice Barge-In &amp; Punctuation</button>
+        <button type="button" class="tab" data-tab="chat">Stateless Tutor Chat</button>
+        <button type="button" class="tab" data-tab="languages">28 Languages &amp; Voices</button>
+      </nav>
+
+      <section class="panel" data-panel="lab">
+        <div class="grid-two">
+          <article class="card">
+            <h2>Adaptive Barge-In Detector</h2>
+            <p class="muted">
+              Uses <code>VoiceBargeInDetector</code> (260ms grace, 180ms speech sustain, vocal-formant gating) +
+              <code>PcmRingBuffer</code>.
+            </p>
+            <div class="btn-row">
+              <button type="button" id="tutor-play-btn" class="btn btn-primary">Play Tutor Line</button>
+              <button type="button" id="simulate-barge-btn" class="btn btn-secondary">Simulate User Interrupt</button>
+              <button type="button" id="mic-btn" class="btn btn-ghost">Start Live Mic</button>
+            </div>
+            <div class="meter-box">
+              <div class="meter-label">
+                <span>RMS Level</span>
+                <span id="dsp-metrics">RMS 0.000 · Formant 0.0</span>
+              </div>
+              <div class="meter-track"><div id="rms-fill" class="meter-fill"></div></div>
+              <div class="meter-label">
+                <span>Barge-In Confidence</span>
+                <span id="barge-state">Idle</span>
+              </div>
+              <div class="meter-track"><div id="barge-fill" class="meter-fill meter-accent"></div></div>
+            </div>
+            <p id="barge-log" class="notice">
+              Click <strong>Play Tutor Line</strong> then <strong>Simulate User Interrupt</strong> (or enable your
+              microphone) to inspect pre-roll capture and interruption handling.
+            </p>
+          </article>
+
+          <article class="card">
+            <h2>Speech Transcript Punctuator</h2>
+            <p class="muted">
+              Applies <code>punctuateBrowserTranscript</code> + <code>detectTtsLanguage</code> +
+              <code>splitTtsSegments</code>.
+            </p>
+            <label class="field-label" for="punctuate-lang">Hint Language</label>
+            <select id="punctuate-lang" class="input"></select>
+            <label class="field-label" for="punctuate-input">Unpunctuated Speech Text</label>
+            <textarea id="punctuate-input" rows="3" class="input">tunggu kenapa kita tidak mulai dari topik baru</textarea>
+            <button type="button" id="punctuate-btn" class="btn btn-primary">Punctuate &amp; Segment</button>
+            <pre id="punctuate-output" class="code-box">{ "hint": "Click 'Punctuate & Segment' to inspect live API output." }</pre>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel hidden" data-panel="chat">
+        <article class="card">
+          <h2>Stateless Single-Turn Tutor Chat</h2>
+          <p class="muted">
+            Runs out-of-the-box in <strong>Local Demo Mode</strong> or connects to your own Google Colab GPU when
+            <code>COLAB_BASE_URL</code> is configured in <code>.env</code>.
+          </p>
+          <div class="btn-row">
+            <button type="button" class="btn btn-ghost" data-sample="can i order an iced coffee please">
+              Sample: Cafe (EN)
+            </button>
+            <button type="button" class="btn btn-ghost" data-sample="halo hari ini aku mau ngobrol santai">
+              Sample: Casual (ID)
+            </button>
+            <button type="button" class="btn btn-ghost" data-sample="今日は何を食べますか">
+              Sample: Question (JA)
+            </button>
+          </div>
+          <div id="chat-log" class="chat-log"></div>
+          <form id="chat-form" class="chat-form">
+            <select id="chat-lang" class="input chat-select" aria-label="Chat Language"></select>
+            <input
+              id="chat-input"
+              type="text"
+              class="input"
+              placeholder="Say or type something without punctuation..."
+              required
+            />
+            <button type="submit" class="btn btn-primary">Send</button>
+          </form>
+        </article>
+      </section>
+
+      <section class="panel hidden" data-panel="languages">
+        <article class="card">
+          <h2>Supported Languages &amp; Neural Voice Presets</h2>
+          <div id="preset-list" class="preset-grid"></div>
+          <input
+            id="lang-search"
+            type="search"
+            class="input"
+            placeholder="Filter languages by name, native script, or BCP-47 code..."
+          />
+          <div id="lang-grid" class="lang-grid"></div>
+        </article>
+      </section>
+    </main>
+
+    <script src="/app.js"></script>
+  </body>
+</html>
